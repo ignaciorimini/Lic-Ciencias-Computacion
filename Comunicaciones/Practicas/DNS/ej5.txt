@@ -1,0 +1,110 @@
+# __________________________________________
+# Archivo named.conf para dns.rubikia.com
+view "trabajo"{
+    match-clients {192.168.7.0/24;};
+    recursion yes;
+
+    zone "rubikia.com"{
+        type master;
+        file "/etc/bind/db.rubikia.com";
+        allow-transfer {192.168.7.180; 193.168.7.18};
+    }
+
+    zone "7.168.192.in-addr.arpa"{
+        type master;
+        file "/etc/bind/rev.rubikia.com";
+    }
+
+    zone "spiralti.com"{
+        type slave;
+        file "/etc/bind/db.spiralti.com";
+        masters {31.13.77.51;};
+    }
+}
+
+view "invitados"{
+    match-clients {192.168.8.0/24;};
+    recursion yes;
+
+    zone "rubikia.com"{
+        type master;
+        file "/etc/bind/db.rubikia.com";
+        allow-transfer {192.168.7.180; 193.168.7.18};
+    }
+}
+
+# __________________________________________
+# Archivo named.conf para dns2.ddi.rubikia.com
+view "trabajo"{
+    match-clients {192.168.7.0/24;};
+    recursion yes;
+
+    zone "ddi.rubikia.com"{
+        type master;
+        file "/etc/bind/db.ddi.rubikia.com";
+    }
+
+    zone "rubikia.com"{
+        type slave;
+        file "/etc/bind/db.rubikia.com";
+        masters {192.168.7.18;};
+    }
+}
+
+# __________________________________________
+# Archivo de zona de resolución directa: db.rubikia.com
+$TTL 1D
+$ORIGIN rubikia.com
+@       IN      SOA     dns.rubikia.com     admin.rubikia.com (
+                2024111301  ; Serial
+                12h         ; Refresh
+                15m         ; Retry
+                1D          ; Expire
+                3h          ; Min TTL
+)
+
+        IN      NS      dns.rubikia.com
+        IN      NS      ns_backup.rubikia.com
+        IN      MX  10  mails.rubikia.com
+
+dns         IN      A       192.168.7.18
+ns_backup   IN      A       193.168.7.18
+www         IN      A       192.168.7.181
+
+// Glue record
+ddi         IN      NS      dns2.ddi.rubikia.com
+dns2.ddi    IN      A       192.168.7.180
+
+# __________________________________________
+# Archivo de zona de resolución inversa: rev.rubikia.com
+$TTL 1D
+$ORIGIN 7.168.192.in-addr.arpa
+@       IN      SOA     dns.rubikia.com     admin.rubikia.com (
+                2024111301  ; Serial
+                12h         ; Refresh
+                15m         ; Retry
+                1D          ; Expire
+                3h          ; Min TTL
+)
+
+        IN      NS      dns.rubikia.com
+
+18      IN      PTR     dns.rubikia.com
+181     IN      PTR     www.rubikia.com
+18      IN      PTR     mails.rubikia.com
+
+# __________________________________________
+# Archivo de zona resolución directa: db.ddi.rubikia.com
+$TTL 1D
+$ORIGIN ddi.rubikia.com
+@       IN      SOA     dns2.ddi.rubikia.com    admin.ddi.rubikia.com (
+                20241113
+                12h
+                15m
+                1D
+                3h
+)
+
+        IN      NS      dns2.ddi.rubikia.com
+
+dns2    IN      A       192.168.7.180

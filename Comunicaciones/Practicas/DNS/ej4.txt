@@ -1,0 +1,60 @@
+# __________________________________________
+# Archivo named.conf para ns1.nescafe.nestle.com
+zone "nestle.com"{
+    type master;
+    file "/etc/bind/db.nestle.com";
+    allow-transfer {200.0.113.20; 198.51.100.5;};
+}
+
+zone "113.0.203.in-addr.arpa"{
+    type master;
+    file "/etc/bind/rev.nestle.com"
+    allow-transfer {203.0.113.20;};
+}
+
+# __________________________________________
+# Archivo named.conf para ns1.kitkat.nestle.com
+zone "nestle.com"{
+    type slave;
+    file "/etc/bind/db.nestle.com";
+    masters {203.0.113.10;};
+}
+
+zone "113.0.203.in-addr.arpa"{
+    type slave;
+    file "/etc/bind/rev.nestle.com";
+    masters {203.0.113.10;};
+}
+
+zone "purelife.nestle.com"{
+    type slave;
+    file "/etc/bind/db.purelife.nestle.com";
+    masters {203.0.113.30;};
+}
+
+# __________________________________________
+# Archivo de zona de resolución directa: db.nestle.com
+$TTL 1D
+$ORIGIN nestle.com
+@       IN      SOA     ns1.nescafe.nestle.com      admin.nescafe.nestle.com (
+                2024111301  ; Serial
+                12h         ; Refresh
+                15m         ; Retry
+                1D          ; Expire
+                3h          ; Min TTL
+)
+
+        IN      NS      ns1.nescafe.nestle.com
+        IN      NS      ns1.kitkat.nestle.com
+        IN      MX  10  mail.nescafe.nestle.com
+        IN      MX  20  backupmail.nescafe.nestle.com
+
+ns1.nescafe     IN      A       203.0.113.10
+ns1.kitkat      IN      A       203.0.113.20
+mail.nescafe    IN      A       203.0.113.11
+backupmail.nescafe  IN  A       203.0.113.12
+www             IN      CNAME   ns1.nescafe
+
+// Glue record
+purelife        IN      NS      ns1.purelife.nestle.com
+ns1.purelife    in      A       203.0.113.30

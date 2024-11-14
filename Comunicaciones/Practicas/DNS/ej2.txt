@@ -1,0 +1,61 @@
+# __________________________________________
+# Archivo named.conf para ns1.acme.ar
+zone "acme.ar"{
+    type master;
+    file "/etc/bind/db.acme.ar";
+    allow-transfer {200.13.147.90;};
+}
+
+zone "147.13.200.in-addr.arpa"{
+    type master;
+    file "/etc/bind/rev.acme.ar";
+}
+
+# __________________________________________
+# Archivo named.conf para ns2.cs.acme.ar
+zone "acme.ar"{
+    type slave;
+    file "/etc/bind/db.acme.ar";
+    masters {200.13.147.60;};
+}
+
+# __________________________________________
+# Archivo de zona de resolución directa: db.acme.ar
+$TTL 1D
+$ORIGIN acme.ar
+@       IN      SOA     ns1.acme.ar     admin.acme.ar (
+                2024111302  ; Serial
+                12h         ; Refresh
+                15m         ; Retry
+                1D          ; Expire
+                3h          ; Min TTL
+)
+
+        IN      NS      ns1.acme.ar
+        IN      NS      ns2.cs.acme.ar
+        IN      MX  10  mx.acme.ar
+        IN      MX  20  mx.cs.acme.ar
+
+ns1             IN      A       200.13.147.60
+ns2             IN      A       200.13.147.90   // Glue record
+mx.acme.ar      IN      A       200.13.147.59
+mx.cs.acme.ar   IN      A       200.13.147.113
+
+# __________________________________________
+# Archivo de zona de resolución inversa: rev.acme.ar
+$TTL 1D
+$ORIGIN 147.13.200.in-addr.arpa
+@       IN      SOA     ns1.acme.ar     admin.acme.ar (
+                2024111301  ; Serial
+                12h         ; Refresh
+                15m         ; Retry
+                1D          ; Expire
+                3h          ; Min TTL
+)
+
+        IN      NS      ns1.acme.ar
+
+60      IN      PTR     ns1.acme.ar
+90      IN      PTR     ns2.cs.acme.ar
+59      IN      PTR     mx.acme.ar
+113     IN      PTR     mx.cs.acme.ar

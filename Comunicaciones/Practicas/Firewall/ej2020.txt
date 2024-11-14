@@ -1,0 +1,47 @@
+# Declaración de variables de red.
+LAN = "10.0.1.0/24"
+SERVERS = "10.0.2.0/24"
+DMZ = "181.16.1.16/28"
+WWW = "181.16.1.18"
+DNS = "181.16.1.19"
+DB = "10.0.2.3"
+ADMIN = "10.0.1.22"
+I = /sbin/iptables
+
+# Política por omisión.
+$I -P FORWARD DROP
+
+# Reglas de estado (por omisión la tabla es filter)
+$I -A FORWARD -m state --state INVALID -j DROP
+$I -A FORWARD -m state --state ESTABLISHED, RELATED -j ACCEPT
+
+# __________________________________________
+# Reglas para LAN.
+# LAN no tiene acceso a la red de servidores.
+$I -t filter -A FORWARD -i eth0 -o eth1 -j REJECT
+
+# LAN tiene acceso a todo el resto.
+$I -t filter -A FORWARD -s $LAN -o eth1 -j ACCEPT
+
+# __________________________________________
+# Reglas para DMZ -> afuera.
+# DMZ solo hace consultas DNS hacia el exterior.
+$I -t filter -A FORWARD -i eth2 -o eth3 -p udp -dport 53 -j ACCEPT
+$I -t filter -A FORWARD -i eth2 -o eth3 -p tcp -dport 53 -j ACCEPT
+
+# DMZ puede hacer consultas al servidor de base de datos a través del puerto 3306.
+$I -t filter -A FORWARD -i eth2 -o eth1 -p tcp -dport 3306 -j ACCEPT
+
+# __________________________________________
+# Reglas para exterior -> DMZ (exterior = LAN, SERVER, INTERNET)
+# Solo acceso al dns en puertos tcp y udp 53 de ambos servidores.
+$I -t filter -A FORWARD -o eth2 -p tcp -dport 53 -j ACCEPT
+$I -t filter -A FORWARD -o eth2 -p udp -dport 53 -j ACCEPT
+
+# Acceso al servidor web en puertos 80 y 443.
+$I -t filter -A FORWARD -o eth2 -d $WWW -p tcp \
+    --dports -m multiport 80,443 -j ACCEPT
+
+# __________________________________________
+# Reglas de NAT.
+$I -t nat -A POSTROUTING -s $LAN -o eth3 -j SNAT -to 200.3.1.2
