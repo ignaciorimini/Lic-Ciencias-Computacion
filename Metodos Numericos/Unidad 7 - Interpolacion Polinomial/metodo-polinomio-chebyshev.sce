@@ -63,7 +63,19 @@ function Pn = interpolacionChebyshevLagrange(f,n)
     Pn = interpolacionLagrange(x,y);
 endfunction
 
+// Función que grafica error.
+function err = graficarError(a,b,fx,px)
+    puntos = linspace(a,b,100);
+    err = fx(puntos) - horner(px,puntos);
+    
+    // Graficar el error.
+    plot(puntos, err, 'r');
+    title("Error de interpolación ");
+    xlabel("x");
+    ylabel("Error f(x) - Pn(x)");
+endfunction
 
+// ___________________________________________
 // Ejemplos de prueba
 n = 4;
 Tn = polinomioChebyshev(4);
@@ -88,3 +100,5 @@ res1 = horner(p, 0.243);
 res2 = f(0.243);
 disp("P(0.243): ", res1);
 disp("f(0.243): ", res2);
+
+err = graficarError(-1,1,f,p);
