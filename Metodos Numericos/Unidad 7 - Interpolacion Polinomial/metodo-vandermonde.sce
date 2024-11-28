@@ -61,8 +61,8 @@ function p = metodoVandermonde(x,y)
     disp("Matriz Vandermonde:", X);
     
     // Resolver sistema Xa=y y construir polinomio.
-    a = gausselim(X,y');
-    p = poly(a, "x", "coeff");
+    [coeffs,Aaum] = gausselim(X,y');
+    p = poly(coeffs, "x", "coeff");
 endfunction
 
 // Ejemplo. Polinomio que pase por (1,-1),(2,-1),(3,7),(4,8).

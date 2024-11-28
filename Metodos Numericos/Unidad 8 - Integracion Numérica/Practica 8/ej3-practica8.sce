@@ -1,26 +1,29 @@
 funcprot(0);
 
-// Metod0 del trapecio simple (sin el error)
-function y = metodoTrapecio(f,a,b)
-    y = (f(a)+f(b)) * (b-a)/2;
+// Regla de Simpson
+function w = metodoSimpson(f,a,b)
+    h = (b-a)/2;
+    x1 = a + h;
+    w = (f(a)+4*f(x1)+f(b)) * h/3;
 endfunction
 
-// Metod0 del trapecio compuesto
-function y = metodoTrapecioCompuesto(fx,a,b,n)
-    // Longitud de los intervalos.
+// Metod0 compuesto de Simpson
+function w = metodoSimpsonCompuesto(f,a,b,n)
     h = (b-a)/n;
     
-    // Sumamos los términos extremos (f(x0) y f(xn))
-    y = (fx(a)+fx(b))/2;
+    w = f(a)+f(b);
     
-    // Sumamos los términos intermedios f(xi).
-    for i=1:(n-1)
-        xi = a + h*i;
-        y = y + fx(xi);
+    for i=1:2:n-1
+        xi = a + i*h;
+        w = w + 4*f(xi);
     end
     
-    // Multiplicamos tod0 por h.
-    y = h*y;
+    for i=2:2:n-1
+        xi = a + i*h;
+        w = w + 2*f(xi);
+    end
+    
+    w = h/3 * w;
 endfunction
 
 // _____________________________________
@@ -33,10 +36,10 @@ a = 1;
 b = 3;
 n = 4;
 res = integrate('f','x',a,b);
-res1 = metodoTrapecioCompuesto(f,a,b,n);
+res1 = metodoSimpsonCompuesto(f,a,b,n);
 err1 = abs(res - res1);
 disp("Ejercicio a.");
-disp("Integral real: " + string(res) + "| Integral por metodo del trapecio compuesto: " + string(res1));
+disp("Integral real: " + string(res) + "| Integral por metodo de Simpson compuesto: " + string(res1));
 disp("Error: " + string(err1))
 disp("________________________");
 
@@ -53,7 +56,7 @@ res = integrate('f','x',a,b);
 res1 = metodoTrapecioCompuesto(f,a,b,n);
 err1 = abs(res - res1);
 disp("Ejercicio b.");
-disp("Integral real: " + string(res) + "| Integral por metodo del trapecio compuesto: " + string(res1));
+disp("Integral real: " + string(res) + "| Integral por metodo de Simpson compuesto: " + string(res1));
 disp("Error: " + string(err1))
 disp("________________________");
 
@@ -67,10 +70,10 @@ a = 0;
 b = 3;
 n = 6;
 res = integrate('f','x',a,b);
-res1 = metodoTrapecioCompuesto(f,a,b,n);
+res1 = metodoSimpsonCompuesto(f,a,b,n);
 err1 = abs(res - res1);
 disp("Ejercicio c.");
-disp("Integral real: " + string(res) + "| Integral por metodo del trapecio compuesto: " + string(res1));
+disp("Integral real: " + string(res) + "| Integral por metodo de Simpson compuesto: " + string(res1));
 disp("Error: " + string(err1))
 disp("________________________");
 
@@ -84,10 +87,10 @@ a = 0;
 b = 1;
 n = 8;
 res = integrate('f','x',a,b);
-res1 = metodoTrapecioCompuesto(f,a,b,n);
+res1 = metodoSimpsonCompuesto(f,a,b,n);
 err1 = abs(res - res1);
 disp("Ejercicio d.");
-disp("Integral real: " + string(res) + "| Integral por metodo del trapecio compuesto: " + string(res1));
+disp("Integral real: " + string(res) + "| Integral por metodo de Simpson compuesto: " + string(res1));
 disp("Error: " + string(err1))
 disp("________________________");
 
@@ -102,10 +105,10 @@ a = 0;
 b = 2*%pi;
 n = 8;
 res = integrate('f','x',a,b);
-res1 = metodoTrapecioCompuesto(f,a,b,n);
+res1 = metodoSimpsonCompuesto(f,a,b,n);
 err1 = abs(res - res1);
 disp("Ejercicio e.");
-disp("Integral real: " + string(res) + "| Integral por metodo del trapecio compuesto: " + string(res1));
+disp("Integral real: " + string(res) + "| Integral por metodo de Simpson compuesto: " + string(res1));
 disp("Error: " + string(err1))
 disp("________________________");
 
@@ -119,8 +122,8 @@ a = 0;
 b = 1;
 n = 8;
 res = integrate('f','x',a,b);
-res1 = metodoTrapecioCompuesto(f,a,b,n);
+res1 = metodoSimpsonCompuesto(f,a,b,n);
 err1 = abs(res - res1);
 disp("Ejercicio f.");
-disp("Integral real: " + string(res) + "| Integral por metodo del trapecio compuesto: " + string(res1));
+disp("Integral real: " + string(res) + "| Integral por metodo de Simpson compuesto: " + string(res1));
 disp("Error: " + string(err1))

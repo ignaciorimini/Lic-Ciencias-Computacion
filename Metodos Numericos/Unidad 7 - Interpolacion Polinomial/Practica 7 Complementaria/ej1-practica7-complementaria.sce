@@ -1,4 +1,5 @@
 // MetodO de eliminación Gaussiana con pivoteo parcial.
+// Notar que no se pide la hipótesis de que A tenga elementos distinto de ceros en la diagonal.
 function [x, a] = gausselimPivot(A,b)
     [nA, mA] = size(A);
     [nb, mb] = size(b);
@@ -50,66 +51,48 @@ function [x, a] = gausselimPivot(A,b)
     end
 endfunction
 
-// Funcion que recibe un vector x = [x0, x1, ... xn] de nodos, el grado n (columnas)
-// y construye la matriz de Vandermonde.
-function A = matrizVandermonde(x,n)
-    m = length(x);
-    A = ones(m,n);
+function graficarPolinomio(px,x,y)
+    // Puntos originales
+    plot(x, y, '.'); // Puntos originales marcados con círculos
     
-    for j=2:n
-        A(:,j) = (x').^(j-1);
-    end
-endfunction
-
-// Función que realiza un ajuste polinómico por el métod0 de Mínimos Cuadrados
-// usando un polinomio de grado especificado.
-// Los vectores x e y son vectores fila.
-function [A,px,err] = minimosCuadrados(x,y,grado)    
-    // Verificar que tengan mismo tamaño.
-    n = length(x);
-    if n <> length(y) then
-        error("minimosCuadrados: x e y deben tener misma cantidad de elementos");
-    end
+    // Crear una densidad más alta de puntos para graficar el polinomio ajustado
+    x_denso = linspace(min(x), max(x), 100); // 100 puntos equidistantes en el rango de x
+    y_ajustado = horner(px, x_denso); // Evaluar el polinomio px en los puntos x_denso
     
-    // Construir matriz A de Vandermonde.
-    A = matrizVandermonde(x,grado+1)
-    
-    // Resolver sistema At*A*x = At*y
-    [coeffs, Aaum] = gausselimPivot(A'*A, A'*y');
-    
-    // Construir polinomio con los coeficientes obtenidos.
-    px = poly(coeffs, "x", "coeff");
-    
-    // Cálculo del error.
-    err = norm(A*coeffs - y');
-endfunction
-
-
-// Función para graficar el polinomio interpolante.
-function graficarPolinomio(p, xNodos, yNodos, rangoX)
-    // Evaluar el polinomio p en el rango dado
-    valoresX = linspace(rangoX(1), rangoX(2), 100);
-    valoresY = horner(p, valoresX);
-    
-    // Graficar la curva del polinomio y los puntos.
-    plot(xNodos,yNodos,'.');
-    plot(valoresX, valoresY, "r", "LineWidth", 2);
-    xgrid();
+    // Graficar el polinomio ajustado
+    plot(x_denso, y_ajustado, '-r'); // Curva ajustada en rojo
+    legend(["Datos originales", "Polinomio ajustado"]);
     
     // Títulos y etiquetas
-    legend(["Datos originales", "Polinomio ajustado"]);
     title("Ajuste por Mínimos Cuadrados");
+    xgrid();
     xlabel("x");
     ylabel("y");
 endfunction
 
-// ______________________________________________
-// Ejemplo de prueba.
-x = [0, 1, 2, 3, 4];
-y = [1, 2.2, 2.8, 3.6, 5.1];
-grado = 2;
+// _____________________________________
+// Ejercicio.
+function A = crearMatriz(x)
+    n = length(x);
+    A(:,1) = x.^2;
+    A(:,2) = x.^3;
+    A(:,3) = x.^4;
+endfunction
 
-[A, px, err] = minimosCuadrados(x, y, grado);
+function [px,err] = minimosCuadradosMod(x,y,A)
+    [coeffs, Aaum] = gausselimPivot(A'*A, A'*y');
+    x = poly(0, "x");
+    px = coeffs(1)*x^2 + coeffs(2)*x^3 + coeffs(3)*x^4;
+    err = norm(A*coeffs - y');
+endfunction
+
+x = [-2.0, -1.6, -1.2, -0.8, -0.4, 0, 0.4, 0.8, 1.2, 1.6, 2.0];
+y = [1.50, 0.99, 0.61, 0.27, 0.02, -0.0096, 0.065, 0.38, 0.63, 0.98, 1.50];
+grado = 4;
+
+A = crearMatriz(x);
+
+[px, err] = minimosCuadradosMod(x,y,A);
 
 disp("Coeficientes del polinomio ajustado:");
 disp(px);
@@ -117,4 +100,4 @@ disp(px);
 disp("Error del ajuste:");
 disp(err);
 
-graficarPolinomio(px,x,y,[0,5]);
+graficarPolinomio(px,x,y);

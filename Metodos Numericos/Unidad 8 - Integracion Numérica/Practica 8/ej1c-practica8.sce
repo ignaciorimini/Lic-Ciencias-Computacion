@@ -1,41 +1,35 @@
-// Regla del trapecio aproximada
-function w = trapecio(f,a,b)
-    w = (f(a)+f(b)) * (b-a)/2;
+// Metod0 del trapecio simple (sin el error)
+function y = metodoTrapecio(f,a,b)
+    y = (f(a)+f(b)) * (b-a)/2;
 endfunction
 
-// Regla del trapecio extendida
-function w = trapecio_ext(f,a,b,n)
-    // Longitud de los intervalos.
+// Metod0 del trapecio compuesto
+function y = metodoTrapecioCompuesto(f,a,b,n)
     h = (b-a)/n;
     
-    // Sumamos los términos extremos
-    w = (f(a)+f(b))/2;
+    y = (fx(a)+fx(b))/2;
     
-    // Sumamos los términos intermedios
     for i=1:(n-1)
         xi = a + h*i;
-        w = w + f(xi);
+        y = y + fx(xi);
     end
     
-    // Multiplicamos por h
-    w = h*w;
+    y = h*y;
 endfunction
 
 // Regla de Simpson
-function w = simpson(f,a,b)
+function w = metodoSimpson(f,a,b)
     h = (b-a)/2;
     x1 = a + h;
     w = (f(a)+4*f(x1)+f(b)) * h/3;
 endfunction
 
 // Metod0 compuesto de Simpson
-function w = simpson_compuesto(f,a,b,n)
+function w = metodoSimpsonCompuesto(f,a,b,n)
     h = (b-a)/n;
     
-    // Sumamos los valores extremos
     w = f(a)+f(b);
     
-    // Sumamos los valores intermedios
     for i=1:2:n-1
         xi = a + i*h;
         w = w + 4*f(xi);
@@ -49,24 +43,37 @@ function w = simpson_compuesto(f,a,b,n)
     w = h/3 * w;
 endfunction
 
-// Funcion del ejercicio
-function y = f1(x)
+// _____________________________________
+// Ejercicio. Función ln(x) -> integral = xln(x) - x -> 2ln(2) - 2 + 1 = 2ln(2) - 1 = 0.386294
+function y = fx(x)
     y = sin(x)^2;
 endfunction
 
-// Metod0 trapecio
-w = trapecio(f1,0,%pi/3)
-disp("Método trapecio: ", w);
+// Valor de la integral real.
+a = 0;
+b = %pi/3;
+n = 8;
 
-w = trapecio_ext(f1,0,%pi/3,100)
-disp("Método trapecio extendido: ", w);
+res = integrate('fx','x',a,b);
+disp("Integral real: ", res);
 
-// Metod0 simpson
-w = simpson(f1,0,%pi/3)
-disp("Método simpson: ", w);
+// Aproximación con métodos vistos.
+resTrapecio = metodoTrapecio(fx,a,b);
+errTrapecio = abs(res - resTrapecio);
+disp("Integral por metodo del trapecio simple: " + string(resTrapecio));
+disp("Error trapecio simple: " + string(errTrapecio));
 
-w = simpson_compuesto(f1,0,%pi/3,100)
-disp("Método simpson compuesto: ", w);
+resTrapecioComp = metodoTrapecioCompuesto(fx,a,b,n);
+errTrapecioComp = abs(res - resTrapecioComp);
+disp("Integral por metodo del trapecio compuesto: " + string(resTrapecioComp));
+disp("Error trapecio compuesto: " + string(errTrapecioComp));
 
-w = intg(0,%pi/3,f1);
-disp("Integral por Scilab: ", w);
+resSimpson = metodoSimpson(fx,a,b);
+errSimpson = abs(res - resSimpson);
+disp("Integracion por metodo de Simpson simple: " + string(resSimpson));
+disp("Error Simpson simple: " + string(errSimpson));
+
+resSimpsonComp = metodoSimpsonCompuesto(fx,a,b,n);
+errSimpsonComp = abs(res - resSimpsonComp);
+disp("Integracion por metodo de Simpson compuesto: " + string(resSimpsonComp));
+disp("Error Simpson compuesto: " + string(errSimpsonComp));

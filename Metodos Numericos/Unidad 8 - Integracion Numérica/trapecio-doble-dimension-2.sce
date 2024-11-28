@@ -1,4 +1,10 @@
 function I = metodoTrapecioBidimensional(fx,a,b,cx,dx,n,m)
+    // f: función a integrar, f(x, y)
+    // a, b: límites de integración en x
+    // c(x), d(x): funciones que definen los límites en y
+    // n: número de subintervalos en x
+    // m: número de subintervalos en y
+    
     hx = (b - a)/n;
     I = 0;
     
@@ -9,6 +15,8 @@ function I = metodoTrapecioBidimensional(fx,a,b,cx,dx,n,m)
         // Límite inferior y superior en y.
         y1 = cx(xi);
         y2 = dx(xi);
+        
+        // Paso en y.
         hy = (y2 - y1)/m;
         
         // Regla del trapecio sobre y.
@@ -26,22 +34,22 @@ function I = metodoTrapecioBidimensional(fx,a,b,cx,dx,n,m)
 endfunction
 
 // ____________________________________
-// Ejercicio. El area de la circunferencia unitaria deberia dar pi.
+// Ejemplo.
 function w = f(x,y)
-    w = 1;
+    w = x^2 + y^2;
 endfunction
 
 function y = cx(x)
-    y = -sqrt(1 - (x-1)^2);
+    y = 1;
 endfunction
 
 function y = dx(x)
-    y = sqrt(1 - (x-1)^2);
+    y = 3;
 endfunction
 
 a = 0;
 b = 2;
-n = 100;
-m = 100;
+n = 50;
+m = 50;
 res = metodoTrapecioBidimensional(f,a,b,cx,dx,n,m);
 disp("Resultado de la integral: " + string(res));

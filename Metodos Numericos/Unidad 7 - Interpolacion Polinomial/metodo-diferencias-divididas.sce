@@ -1,7 +1,7 @@
 // Funcion que recibe un vector x de nodos x0, x1, ... xn
 // Y un vector y que representa y0 = f(x0), y1 = f(x1)...
 // Y calcula la diferencia dividida dependiendo el tamaño de x 
-// (si x tiene 3 puntos calcula diferencia dividia de orden 3).
+// (si x tiene 3 puntos calcula diferencia dividida de orden 3).
 function w = difDiv(x,y)
     n = length(x);
     
@@ -31,12 +31,19 @@ endfunction
 // Función para graficar el polinomio interpolante.
 function graficarPolinomio(p, xNodos, yNodos, rangoX)
     // Evaluar el polinomio p en el rango dado
-    valoresX = linspace(rangoX(1), rangoX(2), 100); // 100 puntos en el rango
-    valoresY = horner(p, valoresX); // Evaluar el polinomio
+    valoresX = linspace(rangoX(1), rangoX(2), 100);
+    valoresY = horner(p, valoresX);
     
-    // Graficar la curva del polinomio
-    plot2d(valoresX, valoresY, style=2, leg="Polinomio interpolante");
-    xgrid(); // Agregar grilla
+    // Graficar la curva del polinomio y los puntos.
+    plot(xNodos,yNodos,'.');
+    plot(valoresX, valoresY, "r", "LineWidth", 2);
+    xgrid();
+    
+    // Opcional: Títulos y etiquetas
+    legend(["Datos originales", "Polinomio ajustado"]);
+    title("Ajuste por Mínimos Cuadrados");
+    xlabel("x");
+    ylabel("y");
 endfunction
 
 // Ejemplo. Polinomio que pase por (1,-1),(2,-1),(3,7),(4,8).
@@ -47,5 +54,5 @@ y = [-1, -1, 7, 8];
 p = metodoDiferenciasDivididas(x,y);
 disp("Polinomio interpolante: ", p);
 
-// Graficar el polinomio en el intervalo [0, 4].
+// Graficar el polinomio en el intervalo [0, 5].
 graficarPolinomio(p, x, y, [0, 5]);

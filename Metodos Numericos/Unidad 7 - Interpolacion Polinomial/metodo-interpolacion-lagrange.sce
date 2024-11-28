@@ -1,7 +1,7 @@
 // Función que calcula los Lk(x).
 // Recibe un vector x = (x1, x2, ... xk) y el numero k y retorna el polinomio Lk(x)
 function y = LK(x,k)
-    n = length(x);              // Tamaño del vector x.
+    n = length(x);
     r = [x(1:k-1) x(k+1:n)];    // Vector igual a x pero sin xk.
     p = poly(r, "x", "roots");  // Vector a partir de r pero raices (x-x1)(x-x2)... (numerador)
     pk = horner(p, x(k));       // Evalua p(xk) que es el denominador.
