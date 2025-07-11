@@ -12,7 +12,7 @@ f1 f = f 5
 -- Int -> (Int -> Int)
 f2 :: Int -> (Int -> Int)
 f2 x = (+x)
--- Probar (f2 5) 5 -> Deuvelve 10.
+-- Probar (f2 5) 5 -> Devuelve 10.
 
 -- Recibe una función y la compone con la función (*2).
 -- (Int -> Int) -> (Int -> Int)

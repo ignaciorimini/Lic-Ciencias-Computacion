@@ -15,7 +15,7 @@ False == (5 >= 4)
 -- Bien formada: devuelve 0.
 1 + if ('a' < 'z') then -1 else 0
 
--- Bien formada: devuelve True.
+-- Mal formada: ambas ramas de la sentencia if deben tener el mismo tipo. En este caso la rama "then" tiene tipo Bool y la rama "else" tiene tipo Int.
 if fst p then fst p else snd p where p = (True, 2)
 
 -- Bien formada: devuelve True.
