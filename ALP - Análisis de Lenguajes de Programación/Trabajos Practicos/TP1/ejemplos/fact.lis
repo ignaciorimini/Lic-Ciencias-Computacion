@@ -1,0 +1,7 @@
+n = 5;
+fact = 1;
+i = 1;
+
+repeat {
+  fact = fact * i
+} until (i++ > n)

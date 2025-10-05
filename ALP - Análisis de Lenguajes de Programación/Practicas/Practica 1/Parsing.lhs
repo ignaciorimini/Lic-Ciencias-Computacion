@@ -144,3 +144,4 @@ Ignoring spacing
 > symbol                        :: String -> Parser String
 > symbol xs                     =  token (string xs)
 >
+
