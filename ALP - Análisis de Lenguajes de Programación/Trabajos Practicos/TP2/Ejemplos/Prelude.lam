@@ -1,0 +1,20 @@
+def I = \x:E. x
+def K = \x:E.\y:E.x
+def S = \x:E->E->E.\y:E->E.\z:E.(x z) (y z)
+
+def succ = \n:Nat. suc n
+def uno = succ 0
+def dos = succ uno
+def tres = succ dos
+def cuatro = succ tres
+def cinco = succ cuatro
+def seis = succ cinco
+def siete = succ seis
+
+def suma = \n:Nat. \m:Nat. R n (\n:Nat.\m:Nat.succ n) m
+def mult = \a:Nat. \b:Nat. R 0 (\n:Nat.\m:Nat.suma n b) a
+def fact = \a:Nat. R uno (\n:Nat.\m:Nat. mult (suc m) n) a
+
+def l = cons uno cons dos cons tres cons cuatro cons cinco nil
+def s = cons tres cons cinco cons siete nil
+def sumaL = \l:List Nat. RL 0 (\h:Nat. \t:List Nat. \r:Nat. suma h r) l

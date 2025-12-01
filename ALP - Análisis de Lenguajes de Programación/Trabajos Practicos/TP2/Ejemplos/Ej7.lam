@@ -1,0 +1,7 @@
+def sumPos =
+  \l:List Nat.
+    (RL
+      (\i:Nat. nil)
+      (\h:Nat. \t:List Nat. \r:(Nat -> List Nat). 
+      \i:Nat. cons (suma h i) (r (suc i)))
+      l) uno

@@ -1,0 +1,20 @@
+| Etapa      | Entra     | Sale           | Función                     |
+| -----------| --------- | -------------- | --------------------------- |
+| lexer      | texto     | tokens         | separación de palabras      |
+| parser     | tokens    | `LamTerm`      | AST con nombres             |
+| conversion | `LamTerm` | `Term`         | AST sin nombres (De Bruijn) |
+| infer      | `Term`    | `Type` o error | verificación de tipos       |
+| eval       | `Term`    | `Value`        | ejecución                   |
+| quote      | `Value`   | `Term`         | para imprimir               |
+
+
+1) Tests de conversion.
+> stack build
+> stack exec TP2-exe
+> :print \x:E .x
+> :print (\x:E. x) y
+> :print \x:E. \y:E. x
+> cons 0 nil
+> let l = cons (suc 0) nil in cons (suc (suc 0)) l
+> R (suc 0) (\r:Nat. \n:Nat. suc r) (suc (suc (suc 0))) -> suc suc suc suc 0 (suma 1 + 3)
+> RecL 0 (\r:Nat. \h:Nat. suc r) (cons (suc 0) (cons 0 nil)) -> suc suc 0 (Largo de lista usando RecL)
